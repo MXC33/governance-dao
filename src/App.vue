@@ -1,26 +1,33 @@
-<template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+<template lang="pug">
+div
+  h1 DAO Frontend
+  RegisterMember
+  ProposalCreation
+  approveProposal
+  voteOnProposal
+  countVotes
+  
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import RegisterMember from "./components/registerMember/RegisterMember.vue";
+import ProposalCreation from "./components/proposalCreation/ProposalCreation.vue";
+import voteOnProposal from "./components/votes/ProposalVote.vue";
+import approveProposal from "./components/approveProposal/ApproveProposal.vue";
+import countVotes from "./components/votes/CountVotes.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    RegisterMember,
+    ProposalCreation,
+    voteOnProposal,
+    approveProposal,
+    countVotes,
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped>
+/* CSS or UnoCSS styles */
 </style>
