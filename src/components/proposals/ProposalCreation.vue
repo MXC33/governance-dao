@@ -14,6 +14,7 @@ form(@submit.prevent="submitProposal")
 </template>
 
 <script>
+import { connectWallet } from "../Web3/blockchainService";
 import { createProposal } from "../Web3/daoContractService";
 
 export default {
@@ -27,6 +28,7 @@ export default {
   methods: {
     async submitProposal() {
       try {
+        await connectWallet();
         console.log(
           "Submitting proposal:",
           this.proposalDescription,

@@ -6,9 +6,11 @@ const contractAddress = "0x6505dA8d29A3C3B4E2d8Ce581FD50b0D0d29B652";
 // const contract = new ethers.Contract(contractAddress, contractAbi, signer);
 
 const getContract = () => {
-  console.log("ABI:", contractAbi);
-  const providerWithSigner = provider.getSigner();
-  return new ethers.Contract(contractAddress, contractAbi, providerWithSigner);
+  const signer = provider.getSigner();
+  if (!signer) {
+    throw new Error("No Ethereum signer available");
+  }
+  return new ethers.Contract(contractAddress, contractAbi, signer);
 };
 
 const registerMember = async () => {

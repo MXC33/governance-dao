@@ -2,7 +2,6 @@
   <div>
     <button @click="registerMember">Register as Member</button>
     <div v-if="showWelcomePopup">Welcome to the DAO!</div>
-    <button @click="connectWallet">Register as Member</button>
     <!-- Other UI elements -->
   </div>
 </template>
