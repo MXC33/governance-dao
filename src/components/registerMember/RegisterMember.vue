@@ -2,13 +2,14 @@
   <div>
     <button @click="registerMember">Register as Member</button>
     <div v-if="showWelcomePopup">Welcome to the DAO!</div>
+    <button @click="connectWallet">Register as Member</button>
     <!-- Other UI elements -->
   </div>
 </template>
 
 <script>
-import { registerMember } from "../Web3/daoContractService";
-import { connectWallet } from "../Web3/blockchainService";
+import { registerMember } from "../Web3/daoContractService.js";
+import { connectWallet } from "../Web3/blockchainService.js";
 
 export default {
   data() {
@@ -23,6 +24,7 @@ export default {
         await registerMember();
         this.showWelcomePopup = true;
         setTimeout(() => (this.showWelcomePopup = false), 3000);
+        console.log("you are now a member");
       } catch (error) {
         console.error("Registration failed:", error);
       }

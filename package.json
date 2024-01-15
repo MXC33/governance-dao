@@ -10,7 +10,7 @@
   "dependencies": {
     "@babel/plugin-transform-private-methods": "^7.23.3",
     "core-js": "^3.8.3",
-    "ethers": "^6.10.0",
+    "ethers": "^5.7.1",
     "vue": "^3.2.13"
   },
   "devDependencies": {

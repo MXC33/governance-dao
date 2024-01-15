@@ -1,12 +1,19 @@
 import { ethers } from "ethers";
 import contractAbi from "./contractAbi.json";
-import { provider, signer } from "./blockchainService";
+import { provider } from "./blockchainService";
 
 const contractAddress = "0x6505dA8d29A3C3B4E2d8Ce581FD50b0D0d29B652";
-const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+// const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+
+const getContract = () => {
+  console.log("ABI:", contractAbi);
+  const providerWithSigner = provider.getSigner();
+  return new ethers.Contract(contractAddress, contractAbi, providerWithSigner);
+};
 
 const registerMember = async () => {
   try {
+    const contract = getContract();
     const transaction = await contract.registerMember();
     await transaction.wait();
     console.log("Member registered successfully");
@@ -19,6 +26,7 @@ const registerMember = async () => {
 // Function to create a proposal
 const createProposal = async (description, duration) => {
   try {
+    const contract = getContract();
     const durationInSeconds = convertDurationToSeconds(duration);
     const transaction = await contract.createProposal(
       description,
@@ -48,6 +56,7 @@ const convertDurationToSeconds = (duration) => {
 
 const approveProposal = async (proposalId) => {
   try {
+    const contract = getContract();
     const transaction = await contract.approveProposal(proposalId);
     await transaction.wait();
     console.log("Proposal approved successfully");
@@ -59,6 +68,7 @@ const approveProposal = async (proposalId) => {
 
 const voteOnProposal = async (proposalId, vote) => {
   try {
+    const contract = getContract();
     const transaction = await contract.voteOnProposal(proposalId, vote);
     await transaction.wait();
     console.log("Voted on proposal successfully");
@@ -70,6 +80,7 @@ const voteOnProposal = async (proposalId, vote) => {
 
 const countVotes = async (proposalId) => {
   try {
+    const contract = getContract();
     const transaction = await contract.countVotes(proposalId);
     await transaction.wait();
     console.log("Votes counted successfully");
@@ -81,7 +92,6 @@ const countVotes = async (proposalId) => {
 
 export {
   contractAddress,
-  contract,
   provider,
   registerMember,
   createProposal,
