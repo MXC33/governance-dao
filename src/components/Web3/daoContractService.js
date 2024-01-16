@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import contractAbi from "./contractAbi.json";
 import { provider } from "./blockchainService";
 
-const contractAddress = "0x6505dA8d29A3C3B4E2d8Ce581FD50b0D0d29B652";
+const contractAddress = "0xf80ad71C14Ddb97Db73B79db7311c07ba4913274";
 // const contract = new ethers.Contract(contractAddress, contractAbi, signer);
 
 const getContract = () => {
@@ -34,10 +34,11 @@ const registerMember = async () => {
 const createProposal = async (description, duration) => {
   try {
     const contract = getContract();
-    const durationInSeconds = convertDurationToSeconds(duration);
+    // Convert the duration string to the corresponding enum value
+    const enumDuration = convertDurationToEnum(duration);
     const transaction = await contract.createProposal(
       description,
-      durationInSeconds
+      enumDuration
     );
     await transaction.wait();
     console.log("Proposal created successfully");
@@ -47,17 +48,18 @@ const createProposal = async (description, duration) => {
   }
 };
 
-// Helper function to convert duration to seconds as per the smart contract
-const convertDurationToSeconds = (duration) => {
-  switch (duration) {
-    case "OneMinute":
-      return 120; // 60 seconds * 2
-    case "TwentyFourHours":
-      return 24 * 60 * 60; // 24 hours
-    case "OneWeek":
-      return 7 * 24 * 60 * 60; // 7 days
-    default:
-      throw new Error("Invalid duration");
+// Helper function to convert duration string to enum value
+const convertDurationToEnum = (duration) => {
+  const durationEnum = {
+    OneMinute: 0, // Corresponds to Duration.OneMinute in Solidity
+    TwoMinutes: 1, // Corresponds to Duration.TwoMinutes
+    FiveMinutes: 2, // Corresponds to Duration.FiveMinutes
+  };
+
+  if (Object.prototype.hasOwnProperty.call(durationEnum, duration)) {
+    return durationEnum[duration];
+  } else {
+    throw new Error("Invalid duration");
   }
 };
 

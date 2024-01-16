@@ -7,8 +7,8 @@ form(@submit.prevent="submitProposal")
     label(for="duration") Duration:
     select#duration(v-model="selectedDuration" required)
       option(value="OneMinute") 1 Minute
-      option(value="TwentyFourHours") 24 Hours
-      option(value="OneWeek") 1 Week
+      option(value="TwoMinutes") 2 minutes
+      option(value="FiveMinutes") 5 minutes
   button(type="submit") Submit Proposal
   div.error(v-if="errorMessage") {{ errorMessage }}
 </template>
