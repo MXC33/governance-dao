@@ -6,9 +6,14 @@ const contractAddress = "0x6505dA8d29A3C3B4E2d8Ce581FD50b0D0d29B652";
 // const contract = new ethers.Contract(contractAddress, contractAbi, signer);
 
 const getContract = () => {
+  if (!provider) {
+    console.warn("Ethereum provider is not available");
+    return null;
+  }
   const signer = provider.getSigner();
   if (!signer) {
-    throw new Error("No Ethereum signer available");
+    console.warn("No Ethereum signer available");
+    return null;
   }
   return new ethers.Contract(contractAddress, contractAbi, signer);
 };
@@ -68,6 +73,21 @@ const approveProposal = async (proposalId) => {
   }
 };
 
+const fetchAllProposals = async () => {
+  try {
+    const contract = getContract();
+    const filter = contract.filters.ProposalCreated();
+    const events = await contract.queryFilter(filter);
+    return events.map((event) => {
+      const { id, description, proposer } = event.args;
+      return { id: id.toNumber(), description, proposer };
+    });
+  } catch (error) {
+    console.error("Error fetching proposals:", error.message || error);
+    throw error;
+  }
+};
+
 const voteOnProposal = async (proposalId, vote) => {
   try {
     const contract = getContract();
@@ -100,4 +120,5 @@ export {
   approveProposal,
   voteOnProposal,
   countVotes,
+  fetchAllProposals,
 };

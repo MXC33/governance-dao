@@ -7,6 +7,7 @@ div
   approveProposal
   voteOnProposal
   countVotes
+  ViewList
 
   
 </template>
@@ -18,6 +19,7 @@ import voteOnProposal from "./components/votes/ProposalVote.vue";
 import approveProposal from "./components/approveProposal/ApproveProposal.vue";
 import countVotes from "./components/votes/CountVotes.vue";
 import ConnectWallet from "./components/ConnectWallet.vue";
+import ViewList from "./components/proposals/ViewList.vue";
 
 export default {
   name: "App",
@@ -28,6 +30,7 @@ export default {
     approveProposal,
     countVotes,
     ConnectWallet,
+    ViewList,
   },
 };
 </script>

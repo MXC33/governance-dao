@@ -14,16 +14,20 @@ export default {
     return {
       proposalId: "",
       errorMessage: "",
+      isLoading: false, // New state for loading indication
     };
   },
   methods: {
     async approve() {
       try {
+        this.isLoading = true; // Start loading
         await approveProposal(this.proposalId);
         alert("Proposal approved successfully");
+        this.isLoading = false; // Stop loading
       } catch (error) {
         console.error("Error approving proposal:", error);
         this.errorMessage = "Failed to approve proposal: " + error.message;
+        this.isLoading = false; // Stop loading on error
       }
     },
   },
