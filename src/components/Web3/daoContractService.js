@@ -1,8 +1,9 @@
 import { ethers } from "ethers";
 import contractAbi from "./contractAbi.json";
 import { provider } from "./blockchainService";
+import { connectWallet } from "./blockchainService";
 
-const contractAddress = "0xf80ad71C14Ddb97Db73B79db7311c07ba4913274";
+const contractAddress = "0xB0B5E892da9EF3155680BE4cd226a9c95447AfE6";
 // const contract = new ethers.Contract(contractAddress, contractAbi, signer);
 
 const getContract = () => {
@@ -75,19 +76,77 @@ const approveProposal = async (proposalId) => {
   }
 };
 
-const fetchAllProposals = async () => {
-  try {
-    const contract = getContract();
-    const filter = contract.filters.ProposalCreated();
-    const events = await contract.queryFilter(filter);
-    return events.map((event) => {
-      const { id, description, proposer } = event.args;
-      return { id: id.toNumber(), description, proposer };
-    });
-  } catch (error) {
-    console.error("Error fetching proposals:", error.message || error);
-    throw error;
+async function initializeContract() {
+  await connectWallet(); // Ensure the wallet is connected first
+  return getContract(); // Then get the contract instance
+}
+
+export const listenForProposalUpdates = (updateCallback) => {
+  const contract = getContract();
+  if (!contract) {
+    console.warn("Contract instance is not available for event listening");
+    return;
   }
+  contract.on("ProposalUpdated", (id, isApproved) => {
+    if (isApproved) {
+      updateCallback(id);
+    }
+  });
+};
+
+const fetchAllProposals = async () => {
+  console.log("Fetching all proposals from the contract.");
+  const contract = await initializeContract();
+  if (!contract) {
+    console.error("Contract instance is not available");
+    return { proposals: [], contract: null };
+  }
+
+  let proposals = [];
+
+  try {
+    const proposalCount = await contract.getProposalCount();
+    console.log(`Total proposals: ${proposalCount}`);
+
+    for (let i = 1; i <= proposalCount; i++) {
+      const rawProposal = await contract.getProposal(i);
+      console.log(`Raw proposal data for ID ${i}:`, rawProposal); // Log the raw proposal data
+
+      if (rawProposal) {
+        proposals.push({
+          id: rawProposal[0].toString(),
+          votesUp: rawProposal[1].toString(),
+          votesDown: rawProposal[2].toString(),
+          deadline: new Date(rawProposal[3].toNumber() * 1000).toLocaleString(),
+          description: rawProposal[4],
+          isApproved: rawProposal[5],
+          countConducted: rawProposal[6],
+          passed: rawProposal[7],
+        });
+      }
+    }
+
+    console.log("Proposals fetched:", proposals);
+  } catch (error) {
+    console.error("Error fetching proposals:", error);
+    return { proposals: [], contract };
+  }
+
+  // Listen for `ProposalUpdated` event
+  contract.on("ProposalUpdated", (id, isApproved, countConducted, passed) => {
+    console.log(
+      `Proposal ${id} updated: Approved = ${isApproved}, Count Conducted = ${countConducted}, Passed = ${passed}`
+    );
+    // Update your proposals array or state with the new information
+  });
+
+  // Listen for `Vote` event
+  contract.on("Vote", (id, vote) => {
+    console.log(`Vote received for proposal ${id}: Vote = ${vote}`);
+    // Update the votes for the proposal in your state
+  });
+
+  return { proposals, contract };
 };
 
 const voteOnProposal = async (proposalId, vote) => {
