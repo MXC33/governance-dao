@@ -3,7 +3,7 @@ import contractAbi from "./contractAbi.json";
 import { provider } from "./blockchainService";
 import { connectWallet } from "./blockchainService";
 
-const contractAddress = "0xB0B5E892da9EF3155680BE4cd226a9c95447AfE6";
+const contractAddress = "0xf598940629dBB63DC8170b9743C6d4fA25cC2c4F";
 // const contract = new ethers.Contract(contractAddress, contractAbi, signer);
 
 const getContract = () => {
@@ -31,13 +31,23 @@ const registerMember = async () => {
   }
 };
 
-// Function to create a proposal
-const createProposal = async (description, duration) => {
+const checkIfMember = async (address) => {
   try {
     const contract = getContract();
-    // Convert the duration string to the corresponding enum value
+    return await contract.isMember(address);
+  } catch (error) {
+    console.error("Error in checking member status:", error);
+    throw error;
+  }
+};
+
+// Function to create a proposal
+const createProposal = async (title, description, duration) => {
+  try {
+    const contract = getContract();
     const enumDuration = convertDurationToEnum(duration);
     const transaction = await contract.createProposal(
+      title,
       description,
       enumDuration
     );
@@ -110,18 +120,19 @@ const fetchAllProposals = async () => {
 
     for (let i = 1; i <= proposalCount; i++) {
       const rawProposal = await contract.getProposal(i);
-      console.log(`Raw proposal data for ID ${i}:`, rawProposal); // Log the raw proposal data
+      console.log(`Raw proposal data for ID ${i}:`, rawProposal);
 
       if (rawProposal) {
         proposals.push({
           id: rawProposal[0].toString(),
-          votesUp: rawProposal[1].toString(),
-          votesDown: rawProposal[2].toString(),
+          title: rawProposal[1],
+          description: rawProposal[2],
           deadline: new Date(rawProposal[3].toNumber() * 1000).toLocaleString(),
-          description: rawProposal[4],
-          isApproved: rawProposal[5],
-          countConducted: rawProposal[6],
-          passed: rawProposal[7],
+          votesUp: rawProposal[4].toString(),
+          votesDown: rawProposal[5].toString(),
+          isApproved: rawProposal[6],
+          countConducted: rawProposal[7],
+          passed: rawProposal[8],
         });
       }
     }
@@ -182,4 +193,5 @@ export {
   voteOnProposal,
   countVotes,
   fetchAllProposals,
+  checkIfMember,
 };

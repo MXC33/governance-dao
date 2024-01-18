@@ -1,13 +1,12 @@
 <template lang="pug">
-div
-  h1 DAO Frontend
-  ConnectWallet
-  RegisterMember
-  ProposalCreation
-  approveProposal
-  voteOnProposal
-  countVotes
-  ViewList
+DashboardLayout
+  SideBarNavigation
+ConnectWallet
+RegisterMember
+ProposalCreation
+approveProposal
+voteOnProposal
+countVotes
 
   
 </template>
@@ -19,18 +18,20 @@ import voteOnProposal from "./components/votes/ProposalVote.vue";
 import approveProposal from "./components/approveProposal/ApproveProposal.vue";
 import countVotes from "./components/votes/CountVotes.vue";
 import ConnectWallet from "./components/ConnectWallet.vue";
-import ViewList from "./components/proposals/ViewList.vue";
+import DashboardLayout from "./components/Dashboard/DashboardLayout.vue";
+import SideBarNavigation from "./components/Dashboard/SideBarNavigation.vue";
 
 export default {
   name: "App",
   components: {
+    DashboardLayout,
+    SideBarNavigation,
     RegisterMember,
     ProposalCreation,
     voteOnProposal,
     approveProposal,
     countVotes,
     ConnectWallet,
-    ViewList,
   },
 };
 </script>

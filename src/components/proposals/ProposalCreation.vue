@@ -1,6 +1,9 @@
 <template lang="pug">
 form(@submit.prevent="submitProposal")
   .input-group
+    label(for="title") Proposal Title:
+    input#title(type="text" v-model="proposalTitle" required)
+  .input-group
     label(for="description") Proposal Description:
     input#description(type="text" v-model="proposalDescription" required)
   .input-group
@@ -20,6 +23,7 @@ import { createProposal } from "../Web3/daoContractService";
 export default {
   data() {
     return {
+      proposalTitle: "",
       proposalDescription: "",
       selectedDuration: "OneMinute",
       errorMessage: "",
@@ -31,10 +35,15 @@ export default {
         await connectWallet();
         console.log(
           "Submitting proposal:",
+          this.proposalTitle,
           this.proposalDescription,
           this.selectedDuration
         );
-        await createProposal(this.proposalDescription, this.selectedDuration);
+        await createProposal(
+          this.proposalTitle,
+          this.proposalDescription,
+          this.selectedDuration
+        );
         // Handle successful proposal submission
         console.log("Proposal submitted successfully");
       } catch (error) {
