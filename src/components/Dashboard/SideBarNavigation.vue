@@ -7,13 +7,13 @@
     <button @click="emitSelect('ViewList')">Proposal List</button>
     <button @click="emitSelect('CreateProposal')">New Proposal</button>
 
-    <div class="proposal-actions">
-      <button @click="$emit('select', 'ApproveProposals')">
+    <div class="admin-actions">
+      <button v-if="isContractCreator" @click="emitSelect('ApproveProposals')">
         Approve Proposals
       </button>
-
-      <button @click="emitSelect('Vote')">Vote</button>
-      <button @click="emitSelect('CountVotes')">Count Votes</button>
+      <button v-if="isContractCreator" @click="emitSelect('CountVotes')">
+        Count Votes
+      </button>
     </div>
   </aside>
 </template>
@@ -21,14 +21,34 @@
 <script>
 export default {
   name: "SidebarNavigation",
+  data() {
+    return {
+      showCountInput: false,
+      proposalIdInput: "",
+    };
+  },
   methods: {
     emitSelect(action) {
       console.log(`Emitting select event for: ${action}`);
       this.$emit("select", action);
     },
+    toggleCountInput() {
+      this.showCountInput = !this.showCountInput;
+      if (!this.showCountInput) {
+        // When hiding the input, also emit the count event if an ID is entered
+        this.emitCount();
+      }
+    },
+    emitCount() {
+      if (this.proposalIdInput) {
+        this.$emit("count-votes", this.proposalIdInput);
+        this.proposalIdInput = ""; // Reset input after emitting
+      }
+    },
   },
   props: {
     isMember: Boolean,
+    isContractCreator: Boolean,
   },
 };
 </script>
@@ -72,5 +92,11 @@ button:hover {
 select,
 button {
   margin-bottom: 8px;
+}
+
+.admin-actions {
+  margin-top: 20px; /* Adjust the space as needed */
+  padding-top: 10px;
+  border-top: 1px solid #555; /* Optional visual separator */
 }
 </style>

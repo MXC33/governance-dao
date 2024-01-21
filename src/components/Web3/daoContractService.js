@@ -104,6 +104,22 @@ export const listenForProposalUpdates = (updateCallback) => {
   });
 };
 
+const getProposal = async (proposalId) => {
+  try {
+    const contract = getContract();
+    const proposal = await contract.getProposal(proposalId);
+    return {
+      id: proposal.id.toString(),
+      title: proposal.title,
+      description: proposal.description,
+      // ...other properties...
+    };
+  } catch (error) {
+    console.error("Error fetching proposal:", error);
+    throw error;
+  }
+};
+
 const fetchAllProposals = async () => {
   console.log("Fetching all proposals from the contract.");
   const contract = await initializeContract();
@@ -194,4 +210,5 @@ export {
   countVotes,
   fetchAllProposals,
   checkIfMember,
+  getProposal,
 };

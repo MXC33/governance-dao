@@ -1,19 +1,13 @@
 <template lang="pug">
 DashboardLayout
   SideBarNavigation
-ConnectWallet
-RegisterMember
-ProposalCreation
-approveProposal
-voteOnProposal
-countVotes
+
 
   
 </template>
 
 <script>
 import RegisterMember from "./components/registerMember/RegisterMember.vue";
-import ProposalCreation from "./components/proposals/ProposalCreation.vue";
 import voteOnProposal from "./components/votes/ProposalVote.vue";
 import approveProposal from "./components/approveProposal/ApproveProposal.vue";
 import countVotes from "./components/votes/CountVotes.vue";
@@ -27,7 +21,6 @@ export default {
     DashboardLayout,
     SideBarNavigation,
     RegisterMember,
-    ProposalCreation,
     voteOnProposal,
     approveProposal,
     countVotes,

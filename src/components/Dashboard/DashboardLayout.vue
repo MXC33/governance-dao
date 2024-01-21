@@ -5,9 +5,9 @@
       @register-member="registerMember"
       @select="handleComponentSelection"
       :is-member="isMember"
+      :is-contract-creator="isContractCreator"
     />
     <section class="dashboard-content">
-      <!-- Connection and registration status messages -->
       <div v-if="isConnected" class="connection-status">
         You are connected with address: {{ connectedAddress }}
       </div>
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { markRaw } from "vue";
 import SidebarNavigation from "./SideBarNavigation.vue";
 import ConnectWallet from "../ConnectWallet.vue";
 import CreateProposal from "../proposals/ProposalCreation.vue";
@@ -30,14 +31,16 @@ import ViewList from "../proposals/ViewList.vue";
 import ApproveProposals from "../approveProposal/ApproveProposal.vue";
 import { connectWallet } from "../Web3/blockchainService.js";
 import { registerMember, checkIfMember } from "../Web3/daoContractService";
+import UnCountedProposalList from "../proposals/UnCountedProposalsList.vue";
 
 export default {
   components: {
     SidebarNavigation,
     ConnectWallet,
-    CreateProposal,
-    ViewList,
-    ApproveProposals,
+    CreateProposal: markRaw(CreateProposal),
+    ViewList: markRaw(ViewList),
+    ApproveProposals: markRaw(ApproveProposals),
+    UnCountedProposalList: markRaw(UnCountedProposalList),
   },
   data() {
     return {
@@ -50,6 +53,16 @@ export default {
       connectionError: "",
     };
   },
+
+  computed: {
+    isContractCreator() {
+      return (
+        this.connectedAddress.toLowerCase() ===
+        "0xe2c1a7a8255cdecf7c82235e16954a8f366b84f2"
+      );
+    },
+  },
+
   methods: {
     async connectToWallet() {
       try {
@@ -91,6 +104,8 @@ export default {
       const componentMap = {
         ApproveProposals: ApproveProposals,
         ViewList: ViewList,
+        CreateProposal: CreateProposal,
+        CountVotes: UnCountedProposalList,
       };
       this.currentComponent = componentMap[componentName];
     },

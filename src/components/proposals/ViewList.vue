@@ -9,10 +9,15 @@
           :key="proposal.id"
           class="proposal-container"
         >
+          <!-- Proposal Title -->
+          <div class="proposal-item proposal-title">
+            <strong>Title:</strong> {{ proposal.title }}
+          </div>
+          <!-- Proposal Description -->
           <div class="proposal-item proposal-description">
-            <div><strong>Title:</strong> {{ proposal.title }}</div>
             <strong>Description:</strong> {{ proposal.description }}
           </div>
+          <!-- Proposal Metadata -->
           <div class="proposal-item proposal-metadata">
             <div><strong>ID:</strong> {{ proposal.id }}</div>
             <div><strong>Votes Up:</strong> {{ proposal.votesUp }}</div>
@@ -23,12 +28,15 @@
               <strong>Count Conducted:</strong> {{ proposal.countConducted }}
             </div>
             <div><strong>Passed:</strong> {{ proposal.passed }}</div>
-            <div v-if="calculateTimeLeft(proposal.deadline)" class="time-left">
-              <strong>Time left:</strong>
-              {{ calculateTimeLeft(proposal.deadline).hours }} hours,
-              {{ calculateTimeLeft(proposal.deadline).minutes }} minutes,
-              {{ calculateTimeLeft(proposal.deadline).seconds }} seconds
-            </div>
+          </div>
+          <!-- Voting Buttons -->
+          <div class="vote-buttons">
+            <button @click="submitVote(proposal.id, true)" class="vote-yes">
+              Yes
+            </button>
+            <button @click="submitVote(proposal.id, false)" class="vote-no">
+              No
+            </button>
           </div>
         </div>
       </div>
@@ -40,6 +48,7 @@
 import {
   fetchAllProposals,
   listenForProposalUpdates,
+  voteOnProposal,
 } from "../Web3/daoContractService";
 
 export default {
@@ -76,6 +85,23 @@ export default {
         console.error("Error fetching proposals:", error);
         // Handle the error appropriately
       } finally {
+        this.isLoading = false;
+      }
+    },
+
+    async submitVote(proposalId, vote) {
+      try {
+        this.isLoading = true;
+        await voteOnProposal(proposalId, vote);
+        alert(
+          `Vote ${
+            vote ? "Yes" : "No"
+          } submitted successfully for Proposal ID: ${proposalId}`
+        );
+        this.isLoading = false;
+      } catch (error) {
+        console.error("Error submitting vote:", error);
+        this.errorMessage = "Failed to submit vote: " + error.message;
         this.isLoading = false;
       }
     },
