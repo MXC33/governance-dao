@@ -1,4 +1,5 @@
 <template lang="pug">
+//- PageStyle
 DashboardLayout
   SideBarNavigation
 
@@ -14,10 +15,11 @@ import countVotes from "./components/votes/CountVotes.vue";
 import ConnectWallet from "./components/ConnectWallet.vue";
 import DashboardLayout from "./components/Dashboard/DashboardLayout.vue";
 import SideBarNavigation from "./components/Dashboard/SideBarNavigation.vue";
-
+import PageStyle from "./style/PageStyle.vue";
 export default {
   name: "App",
   components: {
+    PageStyle,
     DashboardLayout,
     SideBarNavigation,
     RegisterMember,

@@ -1,25 +1,17 @@
-<template>
-  <div class="dashboard-layout">
-    <SidebarNavigation
-      @connect-wallet="connectToWallet"
-      @register-member="registerMember"
-      @select="handleComponentSelection"
-      :is-member="isMember"
-      :is-contract-creator="isContractCreator"
-    />
-    <section class="dashboard-content">
-      <div v-if="isConnected" class="connection-status">
-        You are connected with address: {{ connectedAddress }}
-      </div>
-      <div v-if="connectionError" class="connection-status error">
-        Failed to connect: {{ connectionError }}
-      </div>
-      <div v-if="registrationSuccess" class="connection-status">
-        Registration successful!
-      </div>
-      <component :is="currentComponent" />
-    </section>
-  </div>
+<template lang="pug">
+.dashboard-layout
+  SidebarNavigation(
+    @connect-wallet="connectToWallet"
+    @register-member="registerMember"
+    @select="handleComponentSelection"
+    :is-member="isMember"
+    :is-contract-creator="isContractCreator"
+  )
+  section.dashboard-content
+    div(v-if="isConnected" class="connection-status") You are connected with address: {{ connectedAddress }}
+    div(v-if="connectionError" class="connection-status error") Failed to connect: {{ connectionError }}
+    div(v-if="registrationSuccess" class="connection-status") Registration successful!
+    component(:is="currentComponent")
 </template>
 
 <script>

@@ -1,21 +1,15 @@
-<template>
-  <aside class="sidebar-navigation">
-    <button @click="$emit('connect-wallet')">Connect Wallet</button>
-    <button v-if="!isMember" @click="$emit('register-member')">
-      Register as Member
-    </button>
-    <button @click="emitSelect('ViewList')">Proposal List</button>
-    <button @click="emitSelect('CreateProposal')">New Proposal</button>
-
-    <div class="admin-actions">
-      <button v-if="isContractCreator" @click="emitSelect('ApproveProposals')">
-        Approve Proposals
-      </button>
-      <button v-if="isContractCreator" @click="emitSelect('CountVotes')">
-        Count Votes
-      </button>
-    </div>
-  </aside>
+<template lang="pug">
+aside.sidebar-navigation
+  button(@click="$emit('connect-wallet')") Connect Wallet
+  button(v-if="!isMember" @click="$emit('register-member')")
+    | Register as Member
+  button(@click="emitSelect('ViewList')") Proposal List
+  button(@click="emitSelect('CreateProposal')") New Proposal
+  .admin-actions
+    button(v-if="isContractCreator" @click="emitSelect('ApproveProposals')")
+      | Approve Proposals
+    button(v-if="isContractCreator" @click="emitSelect('CountVotes')")
+      | Count Votes
 </template>
 
 <script>
